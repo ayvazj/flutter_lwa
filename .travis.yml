@@ -1,0 +1,49 @@
+matrix:
+  include:
+    - language: android
+      sudo: false
+      jdk: oraclejdk8
+      cache:
+        directories:
+          - $HOME/.pub-cache
+      os:
+        - linux
+      addons:
+        apt:
+          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
+          sources:
+            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+          packages:
+            - libstdc++6
+            - fonts-droid
+      before_install:
+        - cd example
+        - echo yes | sdkmanager "tools" >/dev/null
+        - echo yes | sdkmanager "platform-tools" >/dev/null
+        - echo yes | sdkmanager "build-tools;28.0.3" >/dev/null
+        - echo yes | sdkmanager "platforms;android-26" >/dev/null
+        - echo yes | sdkmanager "platforms;android-28" >/dev/null
+        - echo y | sdkmanager "extras;android;m2repository" >/dev/null
+        - echo y | sdkmanager "extras;google;m2repository" >/dev/null
+        - sdkmanager --list
+      install:
+        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        - ./flutter/bin/flutter doctor -v
+      script:
+        - ./flutter/bin/flutter -v build apk
+
+    - language: objective-c
+      os: osx
+      osx_image: xcode11.1
+      before_install:
+        - cd example
+        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        - ./flutter/bin/flutter doctor -v
+      before_script:
+        - ./flutter/bin/flutter packages pub cache repair
+        - ./flutter/bin/flutter packages get
+        - cd ios && ruby <(curl https://connect.squareup.com/readersdk-installer) install --app-id $SQUARE_READER_SDK_APPLICATION_ID --repo-password $SQUARE_READER_SDK_REPOSITORY_PASSWORD > /dev/null
+      script:
+        - cd ..
+        - ls -la
+        - ./flutter/bin/flutter -v build ios --no-codesign
