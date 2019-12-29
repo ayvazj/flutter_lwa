@@ -1,0 +1,41 @@
+group 'com.github.ayvazj.flutter_lwa'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.3'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation files('libs/login-with-amazon-sdk.jar')
+    implementation ('com.fasterxml.jackson.core:jackson-core:2.4.1')
+    implementation ('com.fasterxml.jackson.core:jackson-annotations:2.4.1')
+    implementation ('com.fasterxml.jackson.core:jackson-databind:2.4.1')
+}

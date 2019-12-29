@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_lwa (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_lwa (from `.symlinks/plugins/flutter_lwa/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_lwa:
+    :path: ".symlinks/plugins/flutter_lwa/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_lwa: f09139d09b6ca13b2e94ca0f73f1cd7309368fc7
+
+PODFILE CHECKSUM: 49ec7d4076524b7e225c38b98147173651ac4b9d
+
+COCOAPODS: 1.8.4
