@@ -43,6 +43,5 @@ matrix:
         - ./flutter/bin/flutter packages pub cache repair
         - ./flutter/bin/flutter packages get
       script:
-        - cd ..
         - ls -la
         - ./flutter/bin/flutter -v build ios --no-codesign
