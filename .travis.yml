@@ -31,7 +31,7 @@ matrix:
         - ./flutter/bin/flutter doctor -v
         - gem install coveralls-lcov
       script:
-        - ./flutter/bin/flutter test --coverage test/*
+        - ./flutter/bin/flutter test --coverage ../test/*
         - ./flutter/bin/flutter -v build apk
       after_success:
         - coveralls-lcov coverage/lcov.info

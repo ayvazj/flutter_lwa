@@ -286,7 +286,7 @@ class LoginWithAmazon {
         LwaAuthorizeResult.fromMap(result.cast<String, dynamic>()));
   }
 
-  Future<LwaAuthorizeResult> signin() {
+  Future<LwaAuthorizeResult> signIn() {
     final Future<LwaAuthorizeResult> result =
         _addMethodCall(_signin, canSkipCall: true);
     bool isCanceled(dynamic error) {

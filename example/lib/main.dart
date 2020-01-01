@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _handleSignIn(BuildContext context) async {
     try {
-      await _loginWithAmazon.signin();
+      await _loginWithAmazon.signIn();
     } catch (error) {
       if (error is PlatformException) {
         Scaffold.of(context).showSnackBar(SnackBar(

@@ -1,23 +1,132 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_lwa/lwa.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('lwa');
+  const MethodChannel channel = MethodChannel('com.github.ayvazj/flutter_lwa');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  const Map<String, String> kUserData = <String, String>{
+    "email": "john.doe@gmail.com",
+    "id": "8162538176523816253123",
+    "photoUrl": "https://lh5.googleusercontent.com/photo.jpg",
+    "displayName": "John Doe",
+  };
+
+  Map<String, dynamic> kDefaultResponses = <String, dynamic>{
+    'getToken': {
+      'accessToken': 'accessToken',
+      'authorizationCode': 'authorizationCode',
+      'clientId': 'clientId',
+      'redirectURI': 'redirectURI',
+    },
+    'signin': {
+      'accessToken': 'accessToken',
+      'authorizationCode': 'authorizationCode',
+      'clientId': 'clientId',
+      'redirectURI': 'redirectURI',
+    },
+    'signout': {
+      'accessToken': '',
+      'authorizationCode': '',
+      'clientId': '',
+      'redirectURI': '',
+    },
+    'getProfile': {
+      'profileData': {
+        'name': 'name',
+        'email': 'email',
+        'user_id': 'user_id',
+        'postal_code': 'postal_code',
+      },
+    },
+  };
+
+  final List<MethodCall> log = <MethodCall>[];
+  Map<String, dynamic> responses;
+  LoginWithAmazon loginWithAmazon;
+
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
+    responses = Map<String, dynamic>.from(kDefaultResponses);
+    channel.setMockMethodCallHandler((MethodCall methodCall) {
+      log.add(methodCall);
+      final dynamic response = responses[methodCall.method];
+      if (response != null && response is Exception) {
+        return Future<dynamic>.error('$response');
+      }
+      return Future<dynamic>.value(response);
     });
+
+    loginWithAmazon = LoginWithAmazon(
+      scopes: <Scope>[ProfileScope.profile(), ProfileScope.postalCode()],
+    );
+    log.clear();
   });
 
   tearDown(() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
+  test('signInSilently', () async {
+    LwaAuthorizeResult authResult = await loginWithAmazon.signInSilently();
+    expect(authResult, isNotNull);
+    expect(authResult.accessToken, isNotNull);
+    expect(
+      log,
+      <Matcher>[
+        isMethodCall('getToken', arguments: <String, dynamic>{
+          'scopes': <dynamic>[
+            ProfileScope.profile().toMap(),
+            ProfileScope.postalCode().toMap(),
+          ],
+        }),
+      ],
+    );
+  });
 
+  test('signin', () async {
+    LwaAuthorizeResult authResult = await loginWithAmazon.signIn();
+    expect(authResult, isNotNull);
+    expect(authResult.accessToken, isNotNull);
+    expect(authResult.accessToken, isNotEmpty);
+    expect(
+      log,
+      <Matcher>[
+        isMethodCall('signin', arguments: <String, dynamic>{
+          'scopes': <dynamic>[
+            ProfileScope.profile().toMap(),
+            ProfileScope.postalCode().toMap(),
+          ],
+        }),
+      ],
+    );
+  });
+
+  test('signout', () async {
+    LwaAuthorizeResult authResult = await loginWithAmazon.signOut();
+    expect(authResult, isNotNull);
+    expect(authResult.accessToken, isNull);
+    expect(
+      log,
+      <Matcher>[
+        isMethodCall('signout', arguments: null),
+      ],
+    );
+  });
+
+  test('fetchUserProfile', () async {
+    LwaUser userProfile = await loginWithAmazon.fetchUserProfile();
+    expect(userProfile, isNotNull);
+    expect(userProfile.userId, isNotNull);
+    expect(userProfile.userEmail, isNotNull);
+    expect(userProfile.userName, isNotNull);
+    expect(userProfile.userPostalCode, isNotNull);
+    expect(
+      log,
+      <Matcher>[
+        isMethodCall('getProfile', arguments: null),
+      ],
+    );
   });
 }
