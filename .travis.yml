@@ -30,7 +30,7 @@ matrix:
         - ./flutter/bin/flutter doctor -v
         - gem install coveralls-lcov
       script:
-        - $TRAVIS_BUILD_DIR/flutter/bin/flutter test --coverage $TRAVIS_BUILD_DIR/flutter/test/*
+        - $TRAVIS_BUILD_DIR/flutter/bin/flutter test --coverage $TRAVIS_BUILD_DIR/test/*
         - cd $TRAVIS_BUILD_DIR/example
         - $TRAVIS_BUILD_DIR/flutter/bin/flutter -v build apk
       after_success:
