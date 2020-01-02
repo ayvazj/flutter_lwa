@@ -7,13 +7,6 @@ void main() {
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const Map<String, String> kUserData = <String, String>{
-    "email": "john.doe@gmail.com",
-    "id": "8162538176523816253123",
-    "photoUrl": "https://lh5.googleusercontent.com/photo.jpg",
-    "displayName": "John Doe",
-  };
-
   Map<String, dynamic> kDefaultResponses = <String, dynamic>{
     'getToken': {
       'accessToken': 'accessToken',
@@ -71,7 +64,7 @@ void main() {
   test('signInSilently', () async {
     LwaAuthorizeResult authResult = await loginWithAmazon.signInSilently();
     expect(authResult, isNotNull);
-    expect(authResult.accessToken, isNotNull);
+    expect(authResult.isLoggedIn, true);
     expect(
       log,
       <Matcher>[
@@ -88,8 +81,7 @@ void main() {
   test('signin', () async {
     LwaAuthorizeResult authResult = await loginWithAmazon.signIn();
     expect(authResult, isNotNull);
-    expect(authResult.accessToken, isNotNull);
-    expect(authResult.accessToken, isNotEmpty);
+    expect(authResult.isLoggedIn, true);
     expect(
       log,
       <Matcher>[
@@ -106,7 +98,7 @@ void main() {
   test('signout', () async {
     LwaAuthorizeResult authResult = await loginWithAmazon.signOut();
     expect(authResult, isNotNull);
-    expect(authResult.accessToken, isNull);
+    expect(authResult.isLoggedIn, false);
     expect(
       log,
       <Matcher>[
