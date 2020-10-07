@@ -12,26 +12,26 @@
 
 #import <Foundation/Foundation.h>
 
-@class AIError;
+@class AMZNLWAError;
 
 #pragma mark - API
 
 /**
-  These constants identify which API succeeded or failed when calling AIAuthenticationDelegate. The value identifying
+  These constants identify which API succeeded or failed when calling AMZNLWAAuthenticationDelegate. The value identifying
   the API is passed in the APIResult and APIError objects.
 
   @since 1.0
 */
 typedef NS_ENUM(NSUInteger, API) {
-    /** Refers to `[AIMobileLib authorizeUserForScopes:delegate:]` */
+    /** Refers to `[AMZNLWAMobileLib authorizeUserForScopes:delegate:]` */
     kAPIAuthorizeUser = 1,
-    /** Refers to `[AIMobileLib getAccessTokenForScopes:withOverrideParams:delegate:]` */
+    /** Refers to `[AMZNLWAMobileLib getAccessTokenForScopes:withOverrideParams:delegate:]` */
     kAPIGetAccessToken = 2,
-    /** Refers to `[AIMobileLib clearAuthorizationState:]` */
+    /** Refers to `[AMZNLWAMobileLib clearAuthorizationState:]` */
     kAPIClearAuthorizationState = 3,
-    /** Refers to `[AIMobileLib getProfile:]` */
+    /** Refers to `[AMZNLWAMobileLib getProfile:]` */
     kAPIGetProfile = 4,
-    /** Refers to `[AIMobileLib authorizeUserForScopes:delegate:options]` */
+    /** Refers to `[AMZNLWAMobileLib authorizeUserForScopes:delegate:options]` */
     kAPIGetAuthorizationCode = 5,
     /** Refers to [AMZNCodePairManager getCodePair]' */
     kAPIGetCodePair = 6,
@@ -41,7 +41,7 @@ typedef NS_ENUM(NSUInteger, API) {
 
 #pragma mark - APIResult
 /**
-  This class encapsulates success information from an AIMobileLib API call.
+  This class encapsulates success information from an AMZNLWAMobileLib API call.
 */
 @interface APIResult : NSObject
 
@@ -51,11 +51,11 @@ typedef NS_ENUM(NSUInteger, API) {
   The result object returned from the API on success. The API result can be `nil`, an `NSDictionary`, or an `NSString`
   depending upon which API created the APIResult.
 
-- `[AIMobileLib authorizeUserForScopes:delegate:]` : Passes `nil` as the result to the delegate.
-- `[AIMobileLib getAccessTokenForScopes:withOverrideParams:delegate:]` : Passes an access token as an `NSString` object
+- `[AMZNLWAMobileLib authorizeUserForScopes:delegate:]` : Passes `nil` as the result to the delegate.
+- `[AMZNLWAMobileLib getAccessTokenForScopes:withOverrideParams:delegate:]` : Passes an access token as an `NSString` object
   to the delegate.
-- `[AIMobileLib clearAuthorizationState:]` : Passes nil as the result to the delegate.
-- `[AIMobileLib getProfile:]` : Passes profile data in an `NSDictionary` object to the delegate. See the API description
+- `[AMZNLWAMobileLib clearAuthorizationState:]` : Passes nil as the result to the delegate.
+- `[AMZNLWAMobileLib getProfile:]` : Passes profile data in an `NSDictionary` object to the delegate. See the API description
   for information on the key:value pairs expected in profile dictionary.
 
   @since 1.0
@@ -74,7 +74,7 @@ typedef NS_ENUM(NSUInteger, API) {
 #pragma mark - APIError
 
 /**
-  This class encapsulates the failure result from an AIMobileLib API call.
+  This class encapsulates the failure result from an AMZNLWAMobileLib API call.
 */
 @interface APIError : NSObject
 
@@ -83,11 +83,11 @@ typedef NS_ENUM(NSUInteger, API) {
 /**
   The error object returned from the API on failure.
 
-  @see See AIError for more details.
+  @see See AMZNLWAError for more details.
 
   @since 1.0
 */
-@property (strong) AIError *error;
+@property (strong) AMZNLWAError *error;
 
 /**
   The API which is returning the error.
@@ -98,12 +98,12 @@ typedef NS_ENUM(NSUInteger, API) {
 
 @end
 
-#pragma mark - AIAuthenticationDelegate
+#pragma mark - AMZNLWAAuthenticationDelegate
 /**
-  Applications calling AIMobileLib APIs must implement the methods of this protocol to receive success and failure
+  Applications calling AMZNLWAMobileLib APIs must implement the methods of this protocol to receive success and failure
   information.
 */
-@protocol AIAuthenticationDelegate <NSObject>
+@protocol AMZNLWAAuthenticationDelegate <NSObject>
 
 @required
 

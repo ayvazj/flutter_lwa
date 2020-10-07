@@ -12,8 +12,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AIError.h"
-#import "AIAuthenticationDelegate.h"
+#import "AMZNLWAError.h"
+#import "AMZNLWAAuthenticationDelegate.h"
 
 /**
   Key name for defining whether to force a refresh of the access token.
@@ -21,14 +21,14 @@
   Pass this key with a string value of "YES" to `getAccessTokenForScopes:withOverrideParams:delegate:` to force the
   method to refresh the access token.
 */
-extern NSString *const kForceRefresh;
+extern NSString *const kAMZNLWAForceRefresh;
 
 /**
   Key name for defining whether sandbox mode is on.
  
   Pass this key with a string value of "YES" to `authorizeUserForScopes:delegate:options:` to switch to the sandbox mode.
  */
-extern NSString *const kAIOptionSandboxMode;
+extern NSString *const kAMZNLWAOptionSandboxMode;
 
 /**
   Key name for defining the scope data parameter.
@@ -36,38 +36,38 @@ extern NSString *const kAIOptionSandboxMode;
   Pass this key with a Json encoded string of scope data to`authorizeUserForScopes:delegate:options` as required by certain 
   types of Amazon services.
 */
-extern NSString *const kAIOptionScopeData;
+extern NSString *const kAMZNLWAOptionScopeData;
 
 /**
   Key name for defining whether to return authorization code.
  
   Pass this key with a BOOL value of `YES` to `authorizeUserForScopes:delegate:options` to get back an authorization code.
 */
-extern NSString *const kAIOptionReturnAuthCode;
+extern NSString *const kAMZNLWAOptionReturnAuthCode;
 
 /**
   Key name for defining the SPOP code challenge parameter.
  
  Pass this key with a string value into the `options` object used when calling `authorizeUserForScopes:delegate:options`
- with kAIOptionReturnAuthCode as `YES`.
+ with kAMZNLWAOptionReturnAuthCode as `YES`.
 */
-extern NSString *const kAIOptionCodeChallenge;
+extern NSString *const kAMZNLWAOptionCodeChallenge;
 
 /**
   Key name for defining the SPOP code challenge method parameter. (Optional)
  
   Pass this key with a string value into the `options` object used when calling `authorizeUserForScopes:delegate:options`
-  with kAIOptionReturnAuthCode as `YES`.
+  with kAMZNLWAOptionReturnAuthCode as `YES`.
  */
-extern NSString *const kAIOptionCodeChallengeMethod;
+extern NSString *const kAMZNLWAOptionCodeChallengeMethod;
 
 /**
-  AIMobileLib is a static class that contains Login with Amazon APIs.
+  AMZNLWAMobileLib is a static class that contains Login with Amazon APIs.
 
   This class provides APIs for getting authorization from users, getting profile information, clearing authorization
   state, and getting authorization tokens to access secure data.
 */
-@interface AIMobileLib : NSObject
+@interface AMZNLWAMobileLib : NSObject
 
 /**
   Allows the user to login and, if necessary, authorize the app for the requested scopes.
@@ -88,35 +88,35 @@ extern NSString *const kAIOptionCodeChallengeMethod;
     information includes customer's name, email and user_id.
   - "postal_code": This scope enables an app to request the postal code registered to the user's account.
 
-  The result of this API is sent to the `delegate`. On success, `[AIAuthenticationDelegate requestDidSucceed:]` is
+  The result of this API is sent to the `delegate`. On success, `[AMZNLWAAuthenticationDelegate requestDidSucceed:]` is
   called. The app can now call `getProfile:` to retrieve the user's profile data, or
   `getAccessTokenForScopes:withOverrideParams:delegate:` to retrieve the raw access token. On failure,
-  `[AIAuthenticationDelegate requestDidFail:]` is called. The error code and an error message are passed to the method
+  `[AMZNLWAAuthenticationDelegate requestDidFail:]` is called. The error code and an error message are passed to the method
   in the APIError object. Error codes that can be returned by this API are:
 
-  - `kAIServerError` : The server encountered an error while completing the request, or the SDK received an unknown
+  - `kAMZNLWAServerError` : The server encountered an error while completing the request, or the SDK received an unknown
                        response from the server.  You can allow the user to login again.
-  - `kAIErrorUserInterrupted` : The user canceled the login page.  You can allow the user to login again.
-  - `kAIAccessDenied` : The user did not consent to the requested scopes.
-  - `kAIDeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
+  - `kAMZNLWAErrorUserInterrupted` : The user canceled the login page.  You can allow the user to login again.
+  - `kAMZNLWAAccessDenied` : The user did not consent to the requested scopes.
+  - `kAMZNLWADeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
                        Keychain. Calling `clearAuthorizationState:` will help.
-  - `kAIInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
-  - `kAINetworkError` : A network error occurred, possibly due to the user being offline.
-  - `kAIUnauthorizedClient` : The app is not authorized to make this call.
-  - `kAIInternalError` : An internal error occurred in the SDK.  You can allow the user to login again.
+  - `kAMZNLWAInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
+  - `kAMZNLWANetworkError` : A network error occurred, possibly due to the user being offline.
+  - `kAMZNLWAUnauthorizedClient` : The app is not authorized to make this call.
+  - `kAMZNLWAInternalError` : An internal error occurred in the SDK.  You can allow the user to login again.
  
   @param scopes The profile scopes that the app is requesting from the user. The first scope must be "profile".
                 "postal_code" is an optional second scope.
-  @param authenticationDelegate A delegate implementing the `AIAuthenticationDelegate` protocol to receive success and
+  @param authenticationDelegate A delegate implementing the `AMZNLWAAuthenticationDelegate` protocol to receive success and
                                 failure messages.
   @param options An optional dictionary of options.
   @since 1.0
 */
 + (void)authorizeUserForScopes:(NSArray *)scopes
-                      delegate:(id <AIAuthenticationDelegate>)authenticationDelegate
+                      delegate:(id <AMZNLWAAuthenticationDelegate>)authenticationDelegate
                        options:(NSDictionary *)options;
 
-+ (void)authorizeUserForScopes:(NSArray *)scopes delegate:(id <AIAuthenticationDelegate>)authenticationDelegate;
++ (void)authorizeUserForScopes:(NSArray *)scopes delegate:(id <AMZNLWAAuthenticationDelegate>)authenticationDelegate;
 
 /**
   Once the user has logged in, this method will return a valid access token for the requested scopes.
@@ -132,35 +132,35 @@ extern NSString *const kAIOptionCodeChallengeMethod;
 
   Values that can be used in `overrideParams`:
 
-  - `kForceRefresh` - Forces the SDK to refresh the access token, discarding the current one and retrieving a new one.
+  - `kAMZNLWAForceRefresh` - Forces the SDK to refresh the access token, discarding the current one and retrieving a new one.
 
-  The result of this API is sent to the `delegate`. On success, `[AIAuthenticationDelegate requestDidSucceed:]` is
+  The result of this API is sent to the `delegate`. On success, `[AMZNLWAAuthenticationDelegate requestDidSucceed:]` is
   called. The new access token is passed in the result property of the APIResult parameter.  The app can then use the
-  access token directly with services that support it. On failure, `[AIAuthenticationDelegate requestDidFail:]` is
+  access token directly with services that support it. On failure, `[AMZNLWAAuthenticationDelegate requestDidFail:]` is
   called. The error code and an error message are passed to the method in the APIError object. Error codes that can be
   returned by this API are:
 
-  - `kAIApplicationNotAuthorized` : The app is not authorized for scopes requested. Call
+  - `kAMZNLWAApplicationNotAuthorized` : The app is not authorized for scopes requested. Call
                                     `authorizeUserForScopes:delegate:` to allow the user to authorize the app.
-  - `kAIServerError` : The server encountered an error while completing the request, or the SDK received an unknown
+  - `kAMZNLWAServerError` : The server encountered an error while completing the request, or the SDK received an unknown
                        response from the server.  You can allow the user to login again.
-  - `kAIDeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
+  - `kAMZNLWADeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
                        Keychain. Calling `clearAuthorizationState:` will help.
-  - `kAIInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
-  - `kAINetworkError` : A network error occurred, possibly due to the user being offline.
-  - `kAIUnauthorizedClient` : The app is not authorized to make this call.
-  - `kAIInternalError` : An internal error occurred in the SDK.  You can allow the user to login again.
+  - `kAMZNLWAInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
+  - `kAMZNLWANetworkError` : A network error occurred, possibly due to the user being offline.
+  - `kAMZNLWAUnauthorizedClient` : The app is not authorized to make this call.
+  - `kAMZNLWAInternalError` : An internal error occurred in the SDK.  You can allow the user to login again.
 
  @param scopes The profile scopes that the app is requesting from the user. The first scope must be "profile".
                 "postal_code" is an optional second scope.
- @param authenticationDelegate A delegate implementing the `AIAuthenticationDelegate` protocol to receive success and
+ @param authenticationDelegate A delegate implementing the `AMZNLWAAuthenticationDelegate` protocol to receive success and
                                failure messages.
  @param overrideParams Dictionary of optional keys to alter behavior of this function.
  @since 1.0
 */
 + (void)getAccessTokenForScopes:(NSArray *)scopes
              withOverrideParams:(NSDictionary *)overrideParams
-                       delegate:(id <AIAuthenticationDelegate>)authenticationDelegate;
+                       delegate:(id <AMZNLWAAuthenticationDelegate>)authenticationDelegate;
 
 /**
   Deletes cached user tokens and other data.  Use this method to logout a user.
@@ -168,19 +168,19 @@ extern NSString *const kAIOptionCodeChallengeMethod;
   This method removes the authorization tokens from the Keychain. It also clears the cookies from the local cookie
   storage to clear the authorization state of the users who checked the "Remember me" checkbox.
 
-  The result of this API is sent to the `delegate`. On success, `[AIAuthenticationDelegate requestDidSucceed:]` is
-  called. On failure, `[AIAuthenticationDelegate requestDidFail:]` is called. The error code and an error message are
+  The result of this API is sent to the `delegate`. On success, `[AMZNLWAAuthenticationDelegate requestDidSucceed:]` is
+  called. On failure, `[AMZNLWAAuthenticationDelegate requestDidFail:]` is called. The error code and an error message are
   passed to the method in the APIError object. Error codes that can be returned by this API are:
 
-  - `kAIDeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
+  - `kAMZNLWADeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
                        Keychain.
-  - `kAIInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
+  - `kAMZNLWAInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
 
- @param authenticationDelegate A delegate implementing the `AIAuthenticationDelegate` protocol to receive success and
+ @param authenticationDelegate A delegate implementing the `AMZNLWAAuthenticationDelegate` protocol to receive success and
                                failure messages.
  @since 1.0
 */
-+ (void)clearAuthorizationState:(id <AIAuthenticationDelegate>)authenticationDelegate;
++ (void)clearAuthorizationState:(id <AMZNLWAAuthenticationDelegate>)authenticationDelegate;
 
 /**
   Use this method to get the profile of the current authorized user.
@@ -189,7 +189,7 @@ extern NSString *const kAIOptionCodeChallengeMethod;
   the "profile" scope prior to calling this method.  If the app is authorized for the "postal_code" scope,
   getProfile will return that information as well.  This profile information is cached for 60 minutes.
 
-  The result of this API is sent to the `delegate`. On success, `[AIAuthenticationDelegate requestDidSucceed:]` is
+  The result of this API is sent to the `delegate`. On success, `[AMZNLWAAuthenticationDelegate requestDidSucceed:]` is
   called. The user profile is passed in the result property of the APIResult parameter as an NSDictionary. The following
   keys are used:
 
@@ -198,27 +198,27 @@ extern NSString *const kAIOptionCodeChallengeMethod;
   - "user_id" : The used id of the user, in the form of "amzn1.user.VALUE".  The user id is unique to the user.
   - "postal_code" : The registered postal code of the user.
 
-  On failure, `[AIAuthenticationDelegate requestDidFail:]` is called. The error code and an error message are passed to
+  On failure, `[AMZNLWAAuthenticationDelegate requestDidFail:]` is called. The error code and an error message are passed to
   the method in the APIError object. Error codes that can be returned by this API are:
 
-  - `kAIApplicationNotAuthorized` : The app is not authorized for scopes requested. Call
+  - `kAMZNLWAApplicationNotAuthorized` : The app is not authorized for scopes requested. Call
                                     `authorizeUserForScopes:delegate:` to allow the user to authorize the app.
-  - `kAIServerError` : The server encountered an error while completing the request, or the SDK received an unknown
+  - `kAMZNLWAServerError` : The server encountered an error while completing the request, or the SDK received an unknown
                        response from the server.  You can allow the user to login again.
-  - `kAIDeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
+  - `kAMZNLWADeviceError` : The SDK encountered an error on the device. The SDK returns this when there is a problem with the
                        Keychain. Calling `clearAuthorizationState:` will help.
-  - `kAIInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
-  - `kAINetworkError` : A network error occurred, possibly due to the user being offline.
-  - `kAIInternalError` : An internal error occurred in the SDK.  You can allow the user to login again.
+  - `kAMZNLWAInvalidInput` : One of the API parameters is invalid.  See the error message for more information.
+  - `kAMZNLWANetworkError` : A network error occurred, possibly due to the user being offline.
+  - `kAMZNLWAInternalError` : An internal error occurred in the SDK.  You can allow the user to login again.
 
-  @param authenticationDelegate A delegate implementing the `AIAuthenticationDelegate` protocol to receive success and
+  @param authenticationDelegate A delegate implementing the `AMZNLWAAuthenticationDelegate` protocol to receive success and
                                failure messages.
   @param options An optional dictionary of options.
   @since 1.0
 */
-+ (void)getProfile:(id <AIAuthenticationDelegate>)authenticationDelegate withOptions:(NSDictionary *)options;
++ (void)getProfile:(id <AMZNLWAAuthenticationDelegate>)authenticationDelegate withOptions:(NSDictionary *)options;
 
-+ (void)getProfile:(id <AIAuthenticationDelegate>)authenticationDelegate;
++ (void)getProfile:(id <AMZNLWAAuthenticationDelegate>)authenticationDelegate;
 
 /**
   Helper function for `authorizeUserForScopes:delegate:`.

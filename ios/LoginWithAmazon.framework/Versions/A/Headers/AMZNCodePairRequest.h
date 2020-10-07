@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AIExchangeRequest.h"
+#import "AMZNLWAExchangeRequest.h"
 
-@interface AMZNCodePairRequest : AIExchangeRequest
+@interface AMZNCodePairRequest : AMZNLWAExchangeRequest
 
 @end
