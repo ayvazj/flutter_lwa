@@ -98,7 +98,7 @@ typedef void (^AMZNSignOutRequestHandler)(NSError * _Nullable error);
  
  @since 3.0
  */
-+ (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication;
++ (BOOL)handleOpenURL:(NSURL *)url sourceApplication:(nullable NSString *)sourceApplication;
 
 @end
 NS_ASSUME_NONNULL_END

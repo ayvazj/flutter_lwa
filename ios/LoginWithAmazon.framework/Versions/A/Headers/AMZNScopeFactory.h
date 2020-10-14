@@ -12,7 +12,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AMZNScope.h"
-#import "AIError.h"
+#import "AMZNLWAError.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @since 3.0
  */
-+ (NSString *)getScopeDataAsJsonString:(NSArray *)scopes withErrorObject:(AIError *)errorObject;
++ (NSString *)getScopeDataAsJsonString:(NSArray *)scopes withErrorObject:(AMZNLWAError *)errorObject;
 
 @end
 
