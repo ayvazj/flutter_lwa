@@ -3,7 +3,7 @@ part of 'lwa.dart';
 abstract class Scope {
   String getName();
 
-  Map<String, dynamic> getScopeData();
+  Map<String, dynamic>? getScopeData();
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{'name': getName(), 'scopeData': getScopeData()};
@@ -12,7 +12,7 @@ abstract class Scope {
 
 class GenericScope extends Scope {
   final String _name;
-  final Map<String, Object> _scopeData;
+  final Map<String, Object>? _scopeData;
 
   GenericScope._(this._name, this._scopeData);
 
@@ -26,7 +26,7 @@ class GenericScope extends Scope {
   }
 
   @override
-  Map<String, dynamic> getScopeData() {
+  Map<String, dynamic>? getScopeData() {
     return this._scopeData;
   }
 

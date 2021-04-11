@@ -38,7 +38,7 @@ void main() {
 
   final List<MethodCall> log = <MethodCall>[];
   Map<String, dynamic> responses;
-  LoginWithAmazon loginWithAmazon;
+  late LoginWithAmazon loginWithAmazon;
 
   setUp(() {
     responses = Map<String, dynamic>.from(kDefaultResponses);

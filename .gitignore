@@ -8,5 +8,7 @@ build/
 Build/
 *.iml
 .idea/
-//.idea/
 .last_build_id
+
+Podfile
+Podfile.lock

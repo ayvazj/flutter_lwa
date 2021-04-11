@@ -17,8 +17,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  LwaAuthorizeResult _lwaAuth;
-  LwaUser _lwaUser;
+  LwaAuthorizeResult _lwaAuth = LwaAuthorizeResult.empty();
+  LwaUser _lwaUser = LwaUser.empty();
 
   @override
   void initState() {
@@ -33,11 +33,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> _fetchUserProfile() async {
-    if (_lwaAuth != null && _lwaAuth.isLoggedIn) {
+  void _fetchUserProfile() async {
+    if (_lwaAuth.isLoggedIn) {
       _lwaUser = await _loginWithAmazon.fetchUserProfile();
     } else {
-      _lwaUser = null;
+      _lwaUser = LwaUser.empty();
     }
     setState(() {
       _lwaUser = _lwaUser;
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _bodyView(BuildContext context) {
-    return _lwaUser != null && _lwaAuth.isLoggedIn
+    return _lwaAuth.isLoggedIn
         ? _loggedInWidgets()
         : _loggedOutWidgets(context);
   }
