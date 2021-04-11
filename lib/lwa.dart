@@ -16,15 +16,15 @@ const MethodChannel _channel =
 class LwaAuthorizeResult {
   /// The access token returned by the LWA login, which can be used to
   /// access Amazon APIs.
-  final String accessToken;
+  final String? accessToken;
 
   /// The access token returned by the LWA login, which can be used to
   /// access Amazon APIs.
-  final String authorizationCode;
+  final String? authorizationCode;
 
-  final String clientId;
+  final String? clientId;
 
-  final String redirectURI;
+  final String? redirectURI;
 
   LwaAuthorizeResult.empty()
       : accessToken = null,
@@ -33,7 +33,7 @@ class LwaAuthorizeResult {
         redirectURI = null;
 
   bool get isLoggedIn {
-    return this.accessToken != null && this.accessToken.isNotEmpty;
+    return this.accessToken != null && this.accessToken!.isNotEmpty;
   }
 
   /// Constructs instance from a [Map].
@@ -150,20 +150,20 @@ class LwaUser {
 
   LwaUser._(this._userInfo);
 
-  String get userId {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.USER_ID]];
+  String? get userId {
+    return this._userInfo[ProfileKeyValues[PROFILE_KEY.USER_ID]!];
   }
 
-  String get userName {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.NAME]];
+  String? get userName {
+    return this._userInfo[ProfileKeyValues[PROFILE_KEY.NAME]!];
   }
 
-  String get userEmail {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.EMAIL]];
+  String? get userEmail {
+    return this._userInfo[ProfileKeyValues[PROFILE_KEY.EMAIL]!];
   }
 
-  String get userPostalCode {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.POSTAL_CODE]];
+  String? get userPostalCode {
+    return this._userInfo[ProfileKeyValues[PROFILE_KEY.POSTAL_CODE]!];
   }
 
   Map<String, String> get userInfo {
@@ -197,19 +197,19 @@ class LoginWithAmazon {
   final List<Scope> scopes;
 
   /// The currently signed in account, or null if the user is signed out.
-  LwaAuthorizeResult get currentAuth => _currentAuth;
-  LwaAuthorizeResult _currentAuth;
+  LwaAuthorizeResult? get currentAuth => _currentAuth;
+  LwaAuthorizeResult? _currentAuth;
 
-  StreamController<LwaAuthorizeResult> _currentLwaAuthorizeController =
-      StreamController<LwaAuthorizeResult>.broadcast();
+  StreamController<LwaAuthorizeResult?> _currentLwaAuthorizeController =
+      StreamController<LwaAuthorizeResult?>.broadcast();
 
   /// Subscribe to this stream to be notified when the current user changes.
-  Stream<LwaAuthorizeResult> get onLwaAuthorizeChanged =>
+  Stream<LwaAuthorizeResult?> get onLwaAuthorizeChanged =>
       _currentLwaAuthorizeController.stream;
 
   LoginWithAmazon({this.scopes = const <Scope>[]});
 
-  LwaAuthorizeResult _setCurrentAuth(LwaAuthorizeResult currentAuth) {
+  LwaAuthorizeResult? _setCurrentAuth(LwaAuthorizeResult? currentAuth) {
     if (currentAuth != _currentAuth) {
       _currentAuth = currentAuth;
       _currentLwaAuthorizeController.add(_currentAuth);
@@ -218,7 +218,7 @@ class LoginWithAmazon {
   }
 
   /// The most recently scheduled method call.
-  Future<void> _lastMethodCall;
+  Future<void>? _lastMethodCall;
 
   /// Returns a [Future] that completes with a success after [future], whether
   /// it completed with a value or an error.
@@ -231,7 +231,7 @@ class LoginWithAmazon {
     return completer.future;
   }
 
-  Future<LwaAuthorizeResult> _callMethod(Function method) async {
+  Future<LwaAuthorizeResult?> _callMethod(Function method) async {
     final dynamic response = await method();
 
     return _setCurrentAuth(
@@ -246,19 +246,19 @@ class LoginWithAmazon {
   /// The optional, named parameter [canSkipCall] lets the plugin know that the
   /// method call may be skipped, if there's already [_currentAuth] information.
   /// This is used from the [signIn] and [signInSilently] methods.
-  Future<LwaAuthorizeResult> _addMethodCall(
+  Future<LwaAuthorizeResult?> _addMethodCall(
     Function method, {
     bool canSkipCall = false,
   }) async {
-    Future<LwaAuthorizeResult> response;
+    Future<LwaAuthorizeResult?> response;
     if (_lastMethodCall == null) {
       response = _callMethod(method);
     } else {
-      response = _lastMethodCall.then((_) {
+      response = _lastMethodCall!.then((_) {
         // If after the last completed call `currentUser` is not `null` and requested
         // method can be skipped (`canSkipCall`), re-use the same authenticated user
         // instead of making extra call to the native side.
-        if (canSkipCall && _currentAuth != null && _currentAuth.isLoggedIn) {
+        if (canSkipCall && _currentAuth != null && _currentAuth!.isLoggedIn) {
           return _currentAuth;
         }
         return _callMethod(method);
@@ -278,22 +278,22 @@ class LoginWithAmazon {
   /// Returns a [LwaAuthorizeResult] that contains relevant information about
   /// the current login status.
   Future<LwaAuthorizeResult> _signin() async {
-    final Map<dynamic, dynamic> result = await _channel.invokeMethod(
+    final Map<dynamic, dynamic> result = await (_channel.invokeMethod(
       'signin',
       {'scopes': this.scopes.map((s) => s.toMap()).toList()},
-    );
+    ) as FutureOr<Map<dynamic, dynamic>>);
     return _deliverResult(
         LwaAuthorizeResult.fromMap(result.cast<String, dynamic>()));
   }
 
-  Future<LwaAuthorizeResult> signIn() {
-    final Future<LwaAuthorizeResult> result =
+  Future<LwaAuthorizeResult?> signIn() {
+    final Future<LwaAuthorizeResult?> result =
         _addMethodCall(_signin, canSkipCall: true);
-    bool isCanceled(dynamic error) {
-      ERROR_TYPE err = ERROR_TYPE.values
-          .firstWhere((v) => v.toString() == 'ERROR_TYPE.' + error.code);
-      return err != null;
-    }
+    // bool isCanceled(dynamic error) {
+    //   ERROR_TYPE err = ERROR_TYPE.values
+    //       .firstWhere((v) => v.toString() == 'ERROR_TYPE.' + error.code);
+    //   return err != null;
+    // }
 
     return result;
   }
@@ -306,17 +306,17 @@ class LoginWithAmazon {
   }
 
   /// Marks current user as being in the signed out state.
-  Future<LwaAuthorizeResult> signOut() => _addMethodCall(_signOut);
+  Future<LwaAuthorizeResult?> signOut() => _addMethodCall(_signOut);
 
   Future<LwaAuthorizeResult> _getToken() async {
-    final Map<dynamic, dynamic> result = await _channel.invokeMethod(
+    final Map<dynamic, dynamic> result = await (_channel.invokeMethod(
       'getToken',
       {'scopes': this.scopes.map((s) => s.toMap()).toList()},
-    );
+    ) as FutureOr<Map<dynamic, dynamic>>);
     return LwaAuthorizeResult.fromMap(result.cast<String, dynamic>());
   }
 
-  Future<LwaAuthorizeResult> signInSilently({
+  Future<LwaAuthorizeResult?> signInSilently({
     bool suppressErrors = true,
   }) async {
     try {
@@ -331,8 +331,8 @@ class LoginWithAmazon {
   }
 
   Future<LwaUser> _getProfile() async {
-    final Map<dynamic, dynamic> result =
-        await _channel.invokeMethod('getProfile');
+    final Map<dynamic, dynamic> result = await (_channel
+        .invokeMethod('getProfile') as FutureOr<Map<dynamic, dynamic>>);
     return _deliverResult(LwaUser.fromMap(result.cast<String, dynamic>()));
   }
 

@@ -38,7 +38,7 @@ void main() {
 
   final List<MethodCall> log = <MethodCall>[];
   Map<String, dynamic> responses;
-  LoginWithAmazon loginWithAmazon;
+  late LoginWithAmazon loginWithAmazon;
 
   setUp(() {
     responses = Map<String, dynamic>.from(kDefaultResponses);
@@ -62,9 +62,9 @@ void main() {
   });
 
   test('signInSilently', () async {
-    LwaAuthorizeResult authResult = await loginWithAmazon.signInSilently();
+    LwaAuthorizeResult? authResult = await (loginWithAmazon.signInSilently());
     expect(authResult, isNotNull);
-    expect(authResult.isLoggedIn, true);
+    expect(authResult?.isLoggedIn ?? false, true);
     expect(
       log,
       <Matcher>[
@@ -79,9 +79,9 @@ void main() {
   });
 
   test('signin', () async {
-    LwaAuthorizeResult authResult = await loginWithAmazon.signIn();
+    LwaAuthorizeResult? authResult = await (loginWithAmazon.signIn());
     expect(authResult, isNotNull);
-    expect(authResult.isLoggedIn, true);
+    expect(authResult?.isLoggedIn ?? false, true);
     expect(
       log,
       <Matcher>[
@@ -96,9 +96,9 @@ void main() {
   });
 
   test('signout', () async {
-    LwaAuthorizeResult authResult = await loginWithAmazon.signOut();
+    LwaAuthorizeResult? authResult = await (loginWithAmazon.signOut());
     expect(authResult, isNotNull);
-    expect(authResult.isLoggedIn, false);
+    expect(authResult?.isLoggedIn ?? false, false);
     expect(
       log,
       <Matcher>[

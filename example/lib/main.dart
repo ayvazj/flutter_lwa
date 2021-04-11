@@ -17,13 +17,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  LwaAuthorizeResult _lwaAuth;
-  LwaUser _lwaUser;
+  LwaAuthorizeResult? _lwaAuth;
+  LwaUser? _lwaUser;
 
   @override
   void initState() {
     super.initState();
-    _loginWithAmazon.onLwaAuthorizeChanged.listen((LwaAuthorizeResult auth) {
+    _loginWithAmazon.onLwaAuthorizeChanged.listen((LwaAuthorizeResult? auth) {
       setState(() {
         _lwaAuth = auth;
       });
@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> _fetchUserProfile() async {
-    if (_lwaAuth != null && _lwaAuth.isLoggedIn) {
+    if (_lwaAuth != null && _lwaAuth!.isLoggedIn) {
       _lwaUser = await _loginWithAmazon.fetchUserProfile();
     } else {
       _lwaUser = null;
@@ -49,11 +49,11 @@ class _MyAppState extends State<MyApp> {
       await _loginWithAmazon.signIn();
     } catch (error) {
       if (error is PlatformException) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("${error.message}"),
         ));
       } else {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.toString()),
         ));
       }
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _bodyView(BuildContext context) {
-    return _lwaUser != null && _lwaAuth.isLoggedIn
+    return _lwaUser != null && _lwaAuth!.isLoggedIn
         ? _loggedInWidgets()
         : _loggedOutWidgets(context);
   }
@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> {
         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
         child: Align(
             alignment: Alignment.topRight,
-            child: FlatButton(
+            child: TextButton(
               child: Text('Logout'),
               onPressed: _handleSignOut,
             )),
@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
           child: Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Text(
-              "Welcome, ${_lwaUser.userName}!\nYour email is ${_lwaUser.userEmail}\nYour zipCode is ${_lwaUser.userPostalCode}\n",
+              "Welcome, ${_lwaUser!.userName}!\nYour email is ${_lwaUser!.userEmail}\nYour zipCode is ${_lwaUser!.userPostalCode}\n",
               maxLines: 6,
               textAlign: TextAlign.center,
             ),

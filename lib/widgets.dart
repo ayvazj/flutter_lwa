@@ -4,8 +4,8 @@ class LwaButton extends StatefulWidget {
   final VoidCallback onPressed;
 
   const LwaButton({
-    Key key,
-    @required this.onPressed,
+    Key? key,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -43,12 +43,10 @@ class _LwaButtonState extends State<LwaButton> {
             image: AssetImage(_btnImage, package: package_name),
           ),
         ),
-        child: new FlatButton(
-            padding: EdgeInsets.all(0.0),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
+        child: TextButton(
+            style: TextButton.styleFrom(padding: EdgeInsets.all(0.0)),
             onPressed: this.widget.onPressed,
-            child: null),
+            child: SizedBox()),
       ),
     );
   }
