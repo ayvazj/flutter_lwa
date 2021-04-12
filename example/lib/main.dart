@@ -49,11 +49,11 @@ class _MyAppState extends State<MyApp> {
       await _loginWithAmazon.signIn();
     } catch (error) {
       if (error is PlatformException) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("${error.message}"),
         ));
       } else {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.toString()),
         ));
       }
@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> {
         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
         child: Align(
             alignment: Alignment.topRight,
-            child: FlatButton(
+            child: TextButton(
               child: Text('Logout'),
               onPressed: _handleSignOut,
             )),

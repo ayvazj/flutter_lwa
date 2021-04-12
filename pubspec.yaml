@@ -1,6 +1,6 @@
 name: flutter_lwa
 description: Login with Amazon Flutter plugin.  Call Amazon APIs from your Flutter application.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/ayvazj/flutter_lwa
 
 environment:

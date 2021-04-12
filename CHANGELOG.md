@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Updated references to deprecated Widgets
+
 ## 1.0.0
 
 * Update to Dart 2.12

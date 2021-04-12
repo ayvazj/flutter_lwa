@@ -38,18 +38,12 @@ class _LwaButtonState extends State<LwaButton> {
       },
       child: Container(
         width: 200,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(_btnImage, package: package_name),
-          ),
-        ),
-        child: new FlatButton(
-            padding: EdgeInsets.all(0.0),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            onPressed: this.widget.onPressed,
-            child: Text("")),
-      ),
+        child: IconButton(
+          icon: Image(image: AssetImage(_btnImage, package: package_name)),
+          iconSize: 50,
+          onPressed: this.widget.onPressed,
+        )
+      )
     );
   }
 }
