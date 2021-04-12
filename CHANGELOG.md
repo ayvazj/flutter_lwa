@@ -1,3 +1,8 @@
+## 1.0.0
+
+* Update to Dart 2.12
+* Refactoring to support null safety
+
 ## 0.2.0
 
 * Update to Login with Amazon iOS SDK to version 3.1.1.
