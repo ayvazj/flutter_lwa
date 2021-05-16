@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
     } catch (error) {
       if (error is PlatformException) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("${error.message}"),
+          content: Text('${error.message}'),
         ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -85,8 +85,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget get _loadingView {
-    return new Center(
-      child: new CircularProgressIndicator(),
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -99,20 +99,20 @@ class _MyAppState extends State<MyApp> {
   Widget _loggedInWidgets() {
     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
         child: Align(
             alignment: Alignment.topRight,
             child: TextButton(
-              child: Text('Logout'),
               onPressed: _handleSignOut,
+              child: const Text('Logout'),
             )),
       ),
       Expanded(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Text(
-              "Welcome, ${_lwaUser.userName}!\nYour email is ${_lwaUser.userEmail}\nYour zipCode is ${_lwaUser.userPostalCode}\n",
+              'Welcome, ${_lwaUser.userName}!\nYour email is ${_lwaUser.userEmail}\nYour zipCode is ${_lwaUser.userPostalCode}\n',
               maxLines: 6,
               textAlign: TextAlign.center,
             ),
@@ -124,8 +124,8 @@ class _MyAppState extends State<MyApp> {
 
   Widget _loggedOutWidgets(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-      Expanded(
-        child: const Center(
+      const Expanded(
+        child: Center(
           child: Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Text(
@@ -137,7 +137,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       Container(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
         child: LwaButton(onPressed: () => _handleSignIn(context)),
       ),
     ]);

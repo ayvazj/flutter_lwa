@@ -1,13 +1,14 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_lwa/lwa.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matcher/matcher.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('com.github.ayvazj/flutter_lwa');
+  const channel = MethodChannel('com.github.ayvazj/flutter_lwa');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Map<String, dynamic> kDefaultResponses = <String, dynamic>{
+  final kDefaultResponses = <String, dynamic>{
     'getToken': {
       'accessToken': 'accessToken',
       'authorizationCode': 'authorizationCode',
@@ -36,7 +37,7 @@ void main() {
     },
   };
 
-  final List<MethodCall> log = <MethodCall>[];
+  final log = <MethodCall>[];
   Map<String, dynamic> responses;
   late LoginWithAmazon loginWithAmazon;
 
@@ -62,7 +63,7 @@ void main() {
   });
 
   test('signInSilently', () async {
-    LwaAuthorizeResult authResult = await loginWithAmazon.signInSilently();
+    final authResult = await loginWithAmazon.signInSilently();
     expect(authResult, isNotNull);
     expect(authResult.isLoggedIn, true);
     expect(
@@ -79,7 +80,7 @@ void main() {
   });
 
   test('signin', () async {
-    LwaAuthorizeResult authResult = await loginWithAmazon.signIn();
+    final authResult = await loginWithAmazon.signIn();
     expect(authResult, isNotNull);
     expect(authResult.isLoggedIn, true);
     expect(
@@ -96,7 +97,7 @@ void main() {
   });
 
   test('signout', () async {
-    LwaAuthorizeResult authResult = await loginWithAmazon.signOut();
+    final authResult = await loginWithAmazon.signOut();
     expect(authResult, isNotNull);
     expect(authResult.isLoggedIn, false);
     expect(
@@ -108,7 +109,7 @@ void main() {
   });
 
   test('fetchUserProfile', () async {
-    LwaUser userProfile = await loginWithAmazon.fetchUserProfile();
+    final userProfile = await loginWithAmazon.fetchUserProfile();
     expect(userProfile, isNotNull);
     expect(userProfile.userId, isNotNull);
     expect(userProfile.userEmail, isNotNull);

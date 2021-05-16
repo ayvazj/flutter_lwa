@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 
+part 'constants.dart';
+
 part 'scope.dart';
 
 part 'widgets.dart';
@@ -12,11 +14,13 @@ part 'widgets.dart';
 const package_name = 'flutter_lwa';
 final log = Logger(package_name);
 
+T? cast<T>(x) => x is T ? x : null;
+
 void initLogging() {
   // disable hierarchical logger
   hierarchicalLoggingEnabled = false;
   Logger.root.level = Level.INFO;
-  // skip logging stactrace below the SEVERE level.
+  // skip logging stack trace below the SEVERE level.
   recordStackTraceAtLevel = Level.SEVERE;
   assert(() {
     recordStackTraceAtLevel = Level.WARNING;
@@ -38,8 +42,7 @@ void initLogging() {
   });
 }
 
-const MethodChannel _channel =
-    const MethodChannel('com.github.ayvazj/$package_name');
+const MethodChannel _channel = MethodChannel('com.github.ayvazj/$package_name');
 
 /// The response from LWA APIs.
 class LwaAuthorizeResult {
@@ -62,15 +65,15 @@ class LwaAuthorizeResult {
         redirectURI = null;
 
   bool get isLoggedIn {
-    return this.accessToken != null && this.accessToken!.isNotEmpty;
+    return accessToken != null && accessToken!.isNotEmpty;
   }
 
   /// Constructs instance from a [Map].
   LwaAuthorizeResult.fromMap(Map<String, dynamic> map)
-      : accessToken = map['accessToken'],
-        authorizationCode = map['authorizationCode'],
-        clientId = map['clientId'],
-        redirectURI = map['redirectURI'];
+      : accessToken = cast<String>(map['accessToken']),
+        authorizationCode = cast<String>(map['authorizationCode']),
+        clientId = cast<String>(map['clientId']),
+        redirectURI = cast<String>(map['redirectURI']);
 
   /// Transforms instance to a [Map].
   Map<String, dynamic> toMap() {
@@ -100,79 +103,6 @@ class LwaAuthorizeResult {
       redirectURI.hashCode;
 }
 
-enum PROFILE_KEY { NAME, EMAIL, USER_ID, POSTAL_CODE }
-
-const Map<PROFILE_KEY, String> ProfileKeyValues = {
-  PROFILE_KEY.NAME: 'name',
-  PROFILE_KEY.EMAIL: 'email',
-  PROFILE_KEY.USER_ID: 'user_id',
-  PROFILE_KEY.POSTAL_CODE: 'postal_code',
-};
-
-enum ERROR_TYPE {
-  INVALID_TOKEN,
-  INVALID_GRANT,
-  INVALID_CLIENT,
-  INVALID_SCOPE,
-  UNAUTHORIZED_CLIENT,
-  WEBVIEW_SSL,
-  ACCESS_DENIED,
-  COM,
-  IO,
-  BAD_PARAM,
-  JSON,
-  PARSE,
-  SERVER_REPSONSE,
-  DATA_STORAGE,
-  THREAD,
-  DCP_DMS,
-  FORCE_UPDATE,
-  REVOKE_AUTH,
-  AUTH_DIALOG,
-  BAD_API_PARAM,
-  INIT,
-  RESOURCES,
-  DIRECTED_ID_NOT_FOUND,
-  INVALID_API,
-  SECURITY,
-  UNKNOWN,
-  REGISTRATION,
-  MISSING_CODE_CHALLENGE,
-  MISSING_TOKEN_FOR_REQUIRED_SCOPES,
-}
-
-const Map<ERROR_TYPE, int> ErrorTypeValues = {
-  ERROR_TYPE.INVALID_TOKEN: 1,
-  ERROR_TYPE.INVALID_GRANT: 2,
-  ERROR_TYPE.INVALID_CLIENT: 3,
-  ERROR_TYPE.INVALID_SCOPE: 4,
-  ERROR_TYPE.UNAUTHORIZED_CLIENT: 5,
-  ERROR_TYPE.WEBVIEW_SSL: 6,
-  ERROR_TYPE.ACCESS_DENIED: 7,
-  ERROR_TYPE.COM: 8,
-  ERROR_TYPE.IO: 9,
-  ERROR_TYPE.BAD_PARAM: 10,
-  ERROR_TYPE.JSON: 11,
-  ERROR_TYPE.PARSE: 12,
-  ERROR_TYPE.SERVER_REPSONSE: 13,
-  ERROR_TYPE.DATA_STORAGE: 14,
-  ERROR_TYPE.THREAD: 15,
-  ERROR_TYPE.DCP_DMS: 16,
-  ERROR_TYPE.FORCE_UPDATE: 17,
-  ERROR_TYPE.REVOKE_AUTH: 18,
-  ERROR_TYPE.AUTH_DIALOG: 19,
-  ERROR_TYPE.BAD_API_PARAM: 20,
-  ERROR_TYPE.INIT: 21,
-  ERROR_TYPE.RESOURCES: 22,
-  ERROR_TYPE.DIRECTED_ID_NOT_FOUND: 23,
-  ERROR_TYPE.INVALID_API: 24,
-  ERROR_TYPE.SECURITY: 25,
-  ERROR_TYPE.UNKNOWN: 26,
-  ERROR_TYPE.REGISTRATION: 27,
-  ERROR_TYPE.MISSING_CODE_CHALLENGE: 28,
-  ERROR_TYPE.MISSING_TOKEN_FOR_REQUIRED_SCOPES: 29
-};
-
 /// The response from LwaUser.
 class LwaUser {
   final Map<String, String> _userInfo;
@@ -180,31 +110,32 @@ class LwaUser {
   LwaUser._(this._userInfo);
 
   String? get userId {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.USER_ID]!];
+    return _userInfo[ProfileKeyValues[PROFILE_KEY.USER_ID]!];
   }
 
   String? get userName {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.NAME]!];
+    return _userInfo[ProfileKeyValues[PROFILE_KEY.NAME]!];
   }
 
   String? get userEmail {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.EMAIL]!];
+    return _userInfo[ProfileKeyValues[PROFILE_KEY.EMAIL]!];
   }
 
   String? get userPostalCode {
-    return this._userInfo[ProfileKeyValues[PROFILE_KEY.POSTAL_CODE]!];
+    return _userInfo[ProfileKeyValues[PROFILE_KEY.POSTAL_CODE]!];
   }
 
   Map<String, String> get userInfo {
-    return this._userInfo;
+    return _userInfo;
   }
 
-  factory LwaUser.fromMap(Map<dynamic, dynamic> map) {
-    LwaUser lwaUser = new LwaUser._(new Map<String, String>());
-    map.forEach((k, v) {
+  factory LwaUser.fromMap(Map<dynamic, dynamic> m) {
+    final lwaUser = LwaUser._(<String, String>{});
+    m.forEach((k, v) {
       if (k == 'userInfo' || k == 'profileData') {
-        if (v is Map<dynamic, dynamic>) {
-          v.forEach((k1, v1) {
+        if (v is Map) {
+          final vmap = Map<String, String>.from(v);
+          vmap.forEach((k1, v1) {
             lwaUser._userInfo[k1] = v1;
           });
         }
@@ -213,7 +144,7 @@ class LwaUser {
     return lwaUser;
   }
 
-  LwaUser.empty() : _userInfo = new Map<String, String>();
+  LwaUser.empty() : _userInfo = <String, String>{};
 
   @override
   bool operator ==(Object other) =>
@@ -231,7 +162,7 @@ class LoginWithAmazon {
   LwaAuthorizeResult get currentAuth => _currentAuth;
   LwaAuthorizeResult _currentAuth = LwaAuthorizeResult.empty();
 
-  StreamController<LwaAuthorizeResult> _currentLwaAuthorizeController =
+  final StreamController<LwaAuthorizeResult> _currentLwaAuthorizeController =
       StreamController<LwaAuthorizeResult>.broadcast();
 
   /// Subscribe to this stream to be notified when the current user changes.
@@ -256,7 +187,7 @@ class LoginWithAmazon {
   /// Returns a [Future] that completes with a success after [future], whether
   /// it completed with a value or an error.
   static Future<void> _waitFor(Future<void> future) {
-    final Completer<void> completer = Completer<void>();
+    final completer = Completer<void>();
     future.whenComplete(completer.complete).catchError((dynamic _) {
       // Ignore if previous call completed with an error.
       // TODO: Should we log errors here, if debug or similar?
@@ -266,8 +197,12 @@ class LoginWithAmazon {
 
   Future<LwaAuthorizeResult> _callMethod(Function method) async {
     final dynamic response = await method();
-    _setCurrentAuth(response);
-    return response;
+    if (response != null && response is LwaAuthorizeResult) {
+      _setCurrentAuth(response);
+      return response;
+    } else {
+      return LwaAuthorizeResult.empty();
+    }
   }
 
   /// Adds call to [method] in a queue for execution.
@@ -310,21 +245,20 @@ class LoginWithAmazon {
   /// Returns a [LwaAuthorizeResult] that contains relevant information about
   /// the current login status.
   Future<LwaAuthorizeResult> _signin() async {
-    final Map<dynamic, dynamic>? result = await _channel.invokeMethod(
+    final result = await _channel.invokeMethod(
       'signin',
-      {'scopes': this.scopes.map((s) => s.toMap()).toList()},
+      {'scopes': scopes.map((s) => s.toMap()).toList()},
     );
-    if (result == null) {
-      return _deliverResult(LwaAuthorizeResult.empty());
-    } else {
+    if (result != null && result is Map) {
       return _deliverResult(
           LwaAuthorizeResult.fromMap(result.cast<String, dynamic>()));
+    } else {
+      return _deliverResult(LwaAuthorizeResult.empty());
     }
   }
 
   Future<LwaAuthorizeResult> signIn() {
-    final Future<LwaAuthorizeResult> result =
-        _addMethodCall(_signin, canSkipCall: true);
+    final result = _addMethodCall(_signin, canSkipCall: true);
     return result;
   }
 
@@ -339,15 +273,15 @@ class LoginWithAmazon {
   Future<LwaAuthorizeResult> signOut() => _addMethodCall(_signOut);
 
   Future<LwaAuthorizeResult> _getToken() async {
-    final Map<dynamic, dynamic>? result = await _channel.invokeMethod(
+    final result = await _channel.invokeMethod(
       'getToken',
-      {'scopes': this.scopes.map((s) => s.toMap()).toList()},
+      {'scopes': scopes.map((s) => s.toMap()).toList()},
     );
-    if (result == null) {
-      return _deliverResult(LwaAuthorizeResult.empty());
-    } else {
+    if (result != null && result is Map) {
       return _deliverResult(
           LwaAuthorizeResult.fromMap(result.cast<String, dynamic>()));
+    } else {
+      return _deliverResult(LwaAuthorizeResult.empty());
     }
   }
 
@@ -358,7 +292,7 @@ class LoginWithAmazon {
       return await _addMethodCall(_getToken, canSkipCall: true);
     } catch (err) {
       if (suppressErrors) {
-        log.warning("$err");
+        log.warning('$err');
         return _deliverResult(LwaAuthorizeResult.empty());
       } else {
         rethrow;
@@ -367,12 +301,11 @@ class LoginWithAmazon {
   }
 
   Future<LwaUser> _getProfile() async {
-    final Map<dynamic, dynamic>? result =
-        await _channel.invokeMethod('getProfile');
-    if (result == null) {
-      return _deliverResult(LwaUser.fromMap({}));
+    final result = await _channel.invokeMethod('getProfile');
+    if (result != null && result is Map) {
+      return _deliverResult(LwaUser.fromMap(Map<String, dynamic>.from(result)));
     } else {
-      return _deliverResult(LwaUser.fromMap(result.cast<String, dynamic>()));
+      return _deliverResult(LwaUser.fromMap({}));
     }
   }
 

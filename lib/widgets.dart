@@ -21,29 +21,27 @@ class _LwaButtonState extends State<LwaButton> {
 
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
-      onTapDown: (tap) {
-        setState(() {
+    return GestureDetector(
+        onTapDown: (tap) {
           setState(() {
-            _btnImage = btnImagePressed;
+            setState(() {
+              _btnImage = btnImagePressed;
+            });
           });
-        });
-      },
-      onTapUp: (tap) {
-        setState(() {
+        },
+        onTapUp: (tap) {
           setState(() {
-            _btnImage = btnImageUnpressed;
+            setState(() {
+              _btnImage = btnImageUnpressed;
+            });
           });
-        });
-      },
-      child: Container(
-        width: 200,
-        child: IconButton(
-          icon: Image(image: AssetImage(_btnImage, package: package_name)),
-          iconSize: 50,
-          onPressed: this.widget.onPressed,
-        )
-      )
-    );
+        },
+        child: Container(
+            width: 200,
+            child: IconButton(
+              icon: Image(image: AssetImage(_btnImage, package: package_name)),
+              iconSize: 50,
+              onPressed: widget.onPressed,
+            )));
   }
 }

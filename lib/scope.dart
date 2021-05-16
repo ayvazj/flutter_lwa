@@ -17,17 +17,17 @@ class GenericScope extends Scope {
   GenericScope._(this._name, this._scopeData);
 
   factory GenericScope(String name) {
-    return new GenericScope._(name, null);
+    return GenericScope._(name, null);
   }
 
   @override
   String getName() {
-    return this._name;
+    return _name;
   }
 
   @override
   Map<String, dynamic>? getScopeData() {
-    return this._scopeData;
+    return _scopeData;
   }
 
   @override
@@ -43,24 +43,24 @@ class GenericScope extends Scope {
 
 class ScopeFactory {
   static Scope scopeNamed(String name) {
-    return new GenericScope(name);
+    return GenericScope(name);
   }
 
   static Scope scopeNamedWithData(String name, Map<String, Object> scopeData) {
-    return new GenericScope._(name, scopeData);
+    return GenericScope._(name, scopeData);
   }
 }
 
 class ProfileScope {
   static Scope profile() {
-    return ScopeFactory.scopeNamed("profile");
+    return ScopeFactory.scopeNamed('profile');
   }
 
   static Scope userId() {
-    return ScopeFactory.scopeNamed("profile:user_id");
+    return ScopeFactory.scopeNamed('profile:user_id');
   }
 
   static Scope postalCode() {
-    return ScopeFactory.scopeNamed("postal_code");
+    return ScopeFactory.scopeNamed('postal_code');
   }
 }

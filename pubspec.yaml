@@ -1,6 +1,6 @@
 name: flutter_lwa
 description: Login with Amazon Flutter plugin.  Call Amazon APIs from your Flutter application.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/ayvazj/flutter_lwa
 
 environment:
@@ -11,10 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
   logging: ^1.0.1
+  matcher: ^0.12.10
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  pedantic: ^1.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
