@@ -1,3 +1,12 @@
+## 2.0.0
+
+* Refactor to support federated development.  
+
+Common types moved into the platform interface package. You may need to add an import statement.
+```
+import 'package:flutter_lwa_platform_interface/flutter_lwa_platform_interface.dart';
+```
+
 ## 1.0.2
 
 * Linting and formatting updates

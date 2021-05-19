@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lwa/lwa.dart';
+import 'package:flutter_lwa_platform_interface/flutter_lwa_platform_interface.dart';
 
 LoginWithAmazon _loginWithAmazon = LoginWithAmazon(
   scopes: <Scope>[ProfileScope.profile(), ProfileScope.postalCode()],

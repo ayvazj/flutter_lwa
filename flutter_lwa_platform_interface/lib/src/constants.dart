@@ -1,4 +1,4 @@
-part of 'lwa.dart';
+part of '../flutter_lwa_platform_interface.dart';
 
 enum PROFILE_KEY { NAME, EMAIL, USER_ID, POSTAL_CODE }
 

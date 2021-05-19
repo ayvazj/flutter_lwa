@@ -1,11 +1,9 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_lwa/lwa.dart';
+import 'package:flutter_lwa_platform_interface/flutter_lwa_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
 
 void main() {
-  const channel = MethodChannel('com.github.ayvazj/flutter_lwa');
-
   TestWidgetsFlutterBinding.ensureInitialized();
 
   final kDefaultResponses = <String, dynamic>{
@@ -39,10 +37,16 @@ void main() {
 
   final log = <MethodCall>[];
   Map<String, dynamic> responses;
-  late LoginWithAmazon loginWithAmazon;
+  late MethodChannelLwa loginWithAmazon;
+  final scopes = <Scope>[ProfileScope.profile(), ProfileScope.postalCode()];
 
   setUp(() {
     responses = Map<String, dynamic>.from(kDefaultResponses);
+
+    loginWithAmazon = MethodChannelLwa();
+    final channel = loginWithAmazon.channel;
+    loginWithAmazon.init(scopes: scopes);
+
     channel.setMockMethodCallHandler((MethodCall methodCall) {
       log.add(methodCall);
       final dynamic response = responses[methodCall.method];
@@ -52,14 +56,11 @@ void main() {
       return Future<dynamic>.value(response);
     });
 
-    loginWithAmazon = LoginWithAmazon(
-      scopes: <Scope>[ProfileScope.profile(), ProfileScope.postalCode()],
-    );
     log.clear();
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    loginWithAmazon.channel.setMockMethodCallHandler(null);
   });
 
   test('signInSilently', () async {

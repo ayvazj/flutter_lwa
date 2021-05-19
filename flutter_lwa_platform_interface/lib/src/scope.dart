@@ -1,4 +1,4 @@
-part of 'lwa.dart';
+part of '../flutter_lwa_platform_interface.dart';
 
 abstract class Scope {
   String getName();
