@@ -8,6 +8,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 part 'src/constants.dart';
 
+part 'src/lwa_authorize_request.dart';
+
 part 'src/lwa_authorize_result.dart';
 
 part 'src/lwa_user.dart';
@@ -28,6 +30,8 @@ final log = Logger('lwa_platform_interface');
 /// [LwaPlatform] methods.
 abstract class LwaPlatform extends PlatformInterface {
   List<Scope> scopes = const <Scope>[];
+  GrantType? grantType;
+  ProofKeyParameters? proofKeyParameters;
   static final Object _token = Object();
 
   LwaPlatform() : super(token: _token) {
@@ -47,7 +51,10 @@ abstract class LwaPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> init({List<Scope> scopes = const <Scope>[]}) async {
+  Future<void> init(
+      {List<Scope> scopes = const <Scope>[],
+      GrantType? grantType,
+      ProofKeyParameters? proofKeyParameters}) async {
     throw UnimplementedError('init() has not been implemented.');
   }
 

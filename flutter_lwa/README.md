@@ -31,10 +31,10 @@ access and create API keys for Android and iOS as described in the documentation
 1. Create a [Login with Amazon](https://developer.amazon.com/apps-and-games/login-with-amazon)
 API key for [Android](https://developer.amazon.com/docs/login-with-amazon/register-android.html).
 
-1. Create a text file located at `{project_root}/android/app/main/assets/api_key.txt`
+1. Create a text file located at `{project_root}/android/app/src/main/assets/api_key.txt`
 
 1. Copy-paste the contents of the API key from the [Login with Amazon](https://developer.amazon.com/apps-and-games/login-with-amazon)
-console into the file `{project_root}/android/app/main/assets/api_key.txt`
+console into the file `{project_root}/android/app/src/main/assets/api_key.txt`
 
 **Done!**
 

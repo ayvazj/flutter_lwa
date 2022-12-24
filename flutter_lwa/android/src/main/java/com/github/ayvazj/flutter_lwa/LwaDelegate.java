@@ -1,9 +1,7 @@
 package com.github.ayvazj.flutter_lwa;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
-
 import com.amazon.identity.auth.device.AuthError;
 import com.amazon.identity.auth.device.api.Listener;
 import com.amazon.identity.auth.device.api.authorization.AuthorizationManager;
@@ -13,11 +11,10 @@ import com.amazon.identity.auth.device.api.authorization.Scope;
 import com.amazon.identity.auth.device.api.authorization.User;
 import com.amazon.identity.auth.device.api.workflow.RequestContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.flutter.plugin.common.MethodChannel;
 
 import java.util.List;
 import java.util.Map;
-
-import io.flutter.plugin.common.MethodChannel;
 
 final class LwaDelegate {
     private static final String TAG = "LwaDelegate";
@@ -34,13 +31,19 @@ final class LwaDelegate {
         this.requestContext.registerListener(lwaAuthorizeListener);
     }
 
-    void signIn(final MethodChannel.Result result, List<Scope> scopes) {
+    void signIn(final MethodChannel.Result result, List<Scope> scopes, AuthorizeRequest.GrantType grantType, ProofKeyParameters proofKeyParameters) {
         this.lwaAuthorizeListener.setResult(result);
-        AuthorizationManager.authorize(
-                new AuthorizeRequest.Builder(requestContext)
-                        .addScopes(createScopes(scopes))
-                        .build()
-        );
+        AuthorizeRequest.Builder builder = new AuthorizeRequest.Builder(requestContext)
+                .addScopes(createScopes(scopes));
+        if (grantType != null) {
+            builder.forGrantType(grantType);
+        }
+        if (proofKeyParameters != null) {
+            builder.withProofKeyParameters(proofKeyParameters.codeChallenge, proofKeyParameters.codeChallengeMethod);
+        }
+        // String codeChallenge, String codeChallengeMethod
+
+        AuthorizationManager.authorize(builder.build());
     }
 
     void signOut(final MethodChannel.Result result) {

@@ -1,15 +1,24 @@
 #import <Flutter/Flutter.h>
 #import "LwaDelegate.h"
+#import "ProofKeyParameters.h"
 #import <LoginWithAmazon/LoginWithAmazon.h>
 
 @implementation LwaDelegate
 
 NSString* const kAMZNLWAErrorNonLocalizedDescription = @"AMZNLWAErrorNonLocalizedDescription";
 
-- (void) signIn:(FlutterResult)result scopes:(NSArray*)scopes {
+- (void) signIn:(FlutterResult)result scopes:(NSArray*)scopes grantType:(AMZNAuthorizationGrantType)grantType proofKeyParameters:(ProofKeyParameters*)proofKeyParameters {
     // Build an authorize request.
     AMZNAuthorizeRequest *request = [[AMZNAuthorizeRequest alloc] init];
     request.scopes = scopes;
+    if (grantType) {
+        request.grantType = grantType;
+    }
+
+    if (proofKeyParameters) {
+        request.codeChallenge = [proofKeyParameters codeChallenge];
+        request.codeChallengeMethod = [proofKeyParameters codeChallengeMethod];
+    }
     
     //scopes;
     // Set interactive strategy as 'AMZNInteractiveStrategyNever'.
