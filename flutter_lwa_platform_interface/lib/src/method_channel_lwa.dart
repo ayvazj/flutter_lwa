@@ -14,8 +14,13 @@ class MethodChannelLwa extends LwaPlatform {
   MethodChannelLwa() : super();
 
   @override
-  Future<void> init({List<Scope> scopes = const <Scope>[]}) async {
+  Future<void> init(
+      {List<Scope> scopes = const <Scope>[],
+      GrantType? grantType,
+      ProofKeyParameters? proofKeyParameters}) async {
     this.scopes = scopes;
+    this.grantType = grantType;
+    this.proofKeyParameters = proofKeyParameters;
   }
 
   @override
@@ -130,9 +135,19 @@ class MethodChannelLwa extends LwaPlatform {
   /// Returns a [LwaAuthorizeResult] that contains relevant information about
   /// the current login status.
   Future<LwaAuthorizeResult> _signin() async {
+    var arguments = <String, dynamic>{SCOPES_ARGUMENT: scopes.map((s) => s.toMap()).toList()};
+    if (grantType != null) {
+      arguments.putIfAbsent(GRANT_TYPE_ARGUMENT, () => '${grantType?.asString()}');
+    }
+    if (proofKeyParameters != null) {
+      arguments.putIfAbsent(PROOFKEY_PARAMETERS_ARGUMENT, () => {
+        CODE_CHALLENGE_ARGUMENT: '${proofKeyParameters?.codeChallenge ?? ""}',
+        CODE_CHALLENGE_METHOD_ARGUMENT: '${proofKeyParameters?.codeChallengeMethod ?? ""}',
+      });
+    }
     final result = await channel.invokeMethod(
-      'signin',
-      {'scopes': scopes.map((s) => s.toMap()).toList()},
+      SIGNIN_ARGUMENT,
+      arguments,
     );
     if (result != null && result is Map) {
       return _deliverResult(
@@ -144,15 +159,15 @@ class MethodChannelLwa extends LwaPlatform {
 
   Future<LwaAuthorizeResult> _signOut() async {
     await channel.invokeMethod(
-      'signout',
+      SIGNOUT_ARGUMENT,
     );
     return _deliverResult(LwaAuthorizeResult.empty());
   }
 
   Future<LwaAuthorizeResult> _getToken() async {
     final result = await channel.invokeMethod(
-      'getToken',
-      {'scopes': scopes.map((s) => s.toMap()).toList()},
+      GETTOKEN_ARGUMENT,
+      {SCOPES_ARGUMENT: scopes.map((s) => s.toMap()).toList()},
     );
     if (result != null && result is Map) {
       return _deliverResult(
@@ -163,7 +178,7 @@ class MethodChannelLwa extends LwaPlatform {
   }
 
   Future<LwaUser> _getProfile() async {
-    final result = await channel.invokeMethod('getProfile');
+    final result = await channel.invokeMethod(GETPROFILE_ARGUMENT);
     if (result != null && result is Map) {
       return _deliverResult(LwaUser.fromMap(Map<String, dynamic>.from(result)));
     } else {

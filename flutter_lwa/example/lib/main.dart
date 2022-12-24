@@ -6,8 +6,30 @@ import 'package:flutter/services.dart';
 import 'package:flutter_lwa/lwa.dart';
 import 'package:flutter_lwa_platform_interface/flutter_lwa_platform_interface.dart';
 
+const LOGIN_OPTIONS_MAP = {
+  'LWA': 'Login with Amazon (LWA)',
+  'AVS': 'Alexa Voice Service (AVS)'
+};
+
 LoginWithAmazon _loginWithAmazon = LoginWithAmazon(
   scopes: <Scope>[ProfileScope.profile(), ProfileScope.postalCode()],
+);
+
+const PRODUCT_DSN = "A17EGG3HZXVDFE";
+const PRODUCT_ID = "TEST_PRODUCT_1";
+
+LoginWithAmazon _loginWithAmazonAVS = LoginWithAmazon(
+  scopes: <Scope>[
+    ProfileScope.profile(),
+    ProfileScope.postalCode(),
+    ScopeFactory.scopeNamed("alexa:voice_service:pre_auth"),
+    ScopeFactory.scopeNamedWithData("alexa:all", {
+      "productInstanceAttributes": {
+        "deviceSerialNumber": PRODUCT_DSN,
+      },
+      "productID": PRODUCT_ID,
+    })
+  ],
 );
 
 void main() => runApp(MyApp());
@@ -20,6 +42,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   LwaAuthorizeResult _lwaAuth = LwaAuthorizeResult.empty();
   LwaUser _lwaUser = LwaUser.empty();
+  String loginOption = 'LWA';
 
   @override
   void initState() {
@@ -27,6 +50,7 @@ class _MyAppState extends State<MyApp> {
     _loginWithAmazon.onLwaAuthorizeChanged.listen((LwaAuthorizeResult auth) {
       setState(() {
         _lwaAuth = auth;
+        loginOption = 'LWA';
       });
       _fetchUserProfile();
     });
@@ -47,7 +71,11 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _handleSignIn(BuildContext context) async {
     try {
-      await _loginWithAmazon.signIn();
+      if (loginOption == 'AVS') {
+        await _loginWithAmazonAVS.signIn();
+      } else {
+        await _loginWithAmazon.signIn();
+      }
     } catch (error) {
       if (error is PlatformException) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -135,6 +163,29 @@ class _MyAppState extends State<MyApp> {
               textAlign: TextAlign.center,
             ),
           ),
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: DropdownButtonFormField<String>(
+          value: loginOption,
+          decoration: const InputDecoration(
+            labelText: 'Login Option',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              loginOption = value!;
+            });
+          },
+          items: LOGIN_OPTIONS_MAP.keys
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(LOGIN_OPTIONS_MAP[value] ?? ''),
+            );
+          }).toList(),
         ),
       ),
       Container(

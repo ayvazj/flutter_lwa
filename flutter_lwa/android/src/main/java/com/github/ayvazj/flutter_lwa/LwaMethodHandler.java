@@ -1,13 +1,13 @@
 package com.github.ayvazj.flutter_lwa;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
-
+import com.amazon.identity.auth.device.api.authorization.AuthorizeRequest;
 import com.amazon.identity.auth.device.api.authorization.Scope;
 import com.amazon.identity.auth.device.api.authorization.ScopeFactory;
 import com.amazon.identity.auth.device.api.workflow.RequestContext;
-
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,11 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-
 public class LwaMethodHandler implements MethodChannel.MethodCallHandler {
     private static final String SCOPES_ARGUMENT = "scopes";
+    private static final String GRANT_TYPE_ARGUMENT = "grantType";
+    private static final String PROOFKEY_PARAMETERS_ARGUMENT = "proofKeyParameters";
+    private static final String CODE_CHALLENGE_ARGUMENT = "codeChallenge";
+    private static final String CODE_CHALLENGE_METHOD_ARGUMENT = "codeChallengeMethod";
     private static final String METHOD_SIGN_IN = "SIGNIN";
     private static final String METHOD_SIGN_OUT = "SIGNOUT";
     private static final String METHOD_GET_TOKEN = "GETTOKEN";
@@ -36,7 +37,7 @@ public class LwaMethodHandler implements MethodChannel.MethodCallHandler {
     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
         switch (call.method.toUpperCase()) {
             case METHOD_SIGN_IN:
-                delegate.signIn(MainThreadResult.from(result), getScopesArgument(call));
+                delegate.signIn(MainThreadResult.from(result), getScopesArgument(call), getGrantTypeArgument(call), getProofKeyParametersArgument(call));
                 break;
             case METHOD_SIGN_OUT:
                 delegate.signOut(MainThreadResult.from(result));
@@ -76,5 +77,41 @@ public class LwaMethodHandler implements MethodChannel.MethodCallHandler {
             }
         }
         return res;
+    }
+
+    private AuthorizeRequest.GrantType getGrantTypeArgument(MethodCall call) {
+        if (call.hasArgument(GRANT_TYPE_ARGUMENT)) {
+            String grantTypeArgument = call.argument(GRANT_TYPE_ARGUMENT);
+            if (grantTypeArgument != null) {
+                for (AuthorizeRequest.GrantType value : AuthorizeRequest.GrantType.values()) {
+                    if (value.name().equalsIgnoreCase(grantTypeArgument)) {
+                        return value;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private ProofKeyParameters getProofKeyParametersArgument(MethodCall call) {
+        if (call.hasArgument(PROOFKEY_PARAMETERS_ARGUMENT)) {
+            Map<String, String> proofKeyArguments = call.argument(PROOFKEY_PARAMETERS_ARGUMENT);
+            String codeChallenge = null;
+            String codeChallengeMethod = null;
+            if (proofKeyArguments != null) {
+                for (String key : proofKeyArguments.keySet()) {
+                    if (key.equalsIgnoreCase(CODE_CHALLENGE_ARGUMENT)) {
+                        codeChallenge = proofKeyArguments.get(key);
+                    }
+                    if (key.equalsIgnoreCase(CODE_CHALLENGE_METHOD_ARGUMENT)) {
+                        codeChallengeMethod = proofKeyArguments.get(key);
+                    }
+                }
+                if (codeChallenge != null && codeChallengeMethod != null) {
+                    return new ProofKeyParameters(codeChallenge, codeChallengeMethod);
+                }
+            }
+        }
+        return null;
     }
 }
