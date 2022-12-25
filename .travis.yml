@@ -30,23 +30,24 @@ matrix:
         - ./flutter/bin/flutter doctor -v
         - gem install coveralls-lcov
       script:
-        - $TRAVIS_BUILD_DIR/flutter/bin/flutter test --coverage $TRAVIS_BUILD_DIR/test/*
-        - cd $TRAVIS_BUILD_DIR/example
+        - cd $TRAVIS_BUILD_DIR/flutter_lwa_platform_interface
+        - $TRAVIS_BUILD_DIR/flutter/bin/flutter test --coverage $TRAVIS_BUILD_DIR/flutter_lwa_platform_interface/test/*
+        - cd $TRAVIS_BUILD_DIR/flutter_lwa/example
         - $TRAVIS_BUILD_DIR/flutter/bin/flutter -v build apk
       after_success:
         - cd $TRAVIS_BUILD_DIR
-        - coveralls-lcov $TRAVIS_BUILD_DIR/coverage/lcov.info
+        - coveralls-lcov $TRAVIS_BUILD_DIR/flutter_lwa_platform_interface/coverage/lcov.info
 
     - language: objective-c
       os: osx
       osx_image: xcode11.1
-      before_install:
-        - cd example
+      install:
         - git clone https://github.com/flutter/flutter.git -b stable --depth 1
         - ./flutter/bin/flutter doctor -v
       before_script:
+        - cd $TRAVIS_BUILD_DIR/flutter_lwa/example
         - ./flutter/bin/flutter packages pub cache repair
         - ./flutter/bin/flutter packages get
       script:
-        - ls -la
-        - ./flutter/bin/flutter -v build ios --no-codesign
+        - cd $TRAVIS_BUILD_DIR/flutter_lwa/example
+        - $TRAVIS_BUILD_DIR/flutter/bin/flutter -v build ios --no-codesign

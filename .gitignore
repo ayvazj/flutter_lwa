@@ -12,3 +12,5 @@ Build/
 
 Podfile
 Podfile.lock
+
+flutter_lwa_platform_interface/coverage/*

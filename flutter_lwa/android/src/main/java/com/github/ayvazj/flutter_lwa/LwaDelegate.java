@@ -41,8 +41,6 @@ final class LwaDelegate {
         if (proofKeyParameters != null) {
             builder.withProofKeyParameters(proofKeyParameters.codeChallenge, proofKeyParameters.codeChallengeMethod);
         }
-        // String codeChallenge, String codeChallengeMethod
-
         AuthorizationManager.authorize(builder.build());
     }
 
