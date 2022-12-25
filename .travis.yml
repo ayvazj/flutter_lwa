@@ -46,8 +46,8 @@ matrix:
         - ./flutter/bin/flutter doctor -v
       before_script:
         - cd $TRAVIS_BUILD_DIR/flutter_lwa/example
-        - ./flutter/bin/flutter packages pub cache repair
-        - ./flutter/bin/flutter packages get
+        - $TRAVIS_BUILD_DIR/flutter/bin/flutter packages pub cache repair
+        - $TRAVIS_BUILD_DIR/flutter/bin/flutter packages get
       script:
         - cd $TRAVIS_BUILD_DIR/flutter_lwa/example
         - $TRAVIS_BUILD_DIR/flutter/bin/flutter -v build ios --no-codesign
