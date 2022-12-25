@@ -18,7 +18,7 @@ part 'src/method_channel_lwa.dart';
 
 part 'src/scope.dart';
 
-const package_name = 'flutter_lwa';
+const packageName = 'flutter_lwa';
 final log = Logger('lwa_platform_interface');
 
 /// The interface that implementations of flutter_lwa must implement.

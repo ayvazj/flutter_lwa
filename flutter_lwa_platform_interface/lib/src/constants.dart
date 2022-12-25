@@ -73,12 +73,12 @@ const Map<ERROR_TYPE, int> ErrorTypeValues = {
   ERROR_TYPE.MISSING_TOKEN_FOR_REQUIRED_SCOPES: 29
 };
 
-const SIGNIN_ARGUMENT = "signin";
-const SIGNOUT_ARGUMENT = "signout";
-const GETTOKEN_ARGUMENT = "getToken";
-const GETPROFILE_ARGUMENT = "getProfile";
-const SCOPES_ARGUMENT = "scopes";
-const GRANT_TYPE_ARGUMENT = "grantType";
-const PROOFKEY_PARAMETERS_ARGUMENT = "proofKeyParameters";
-const CODE_CHALLENGE_ARGUMENT = "codeChallenge";
-const CODE_CHALLENGE_METHOD_ARGUMENT = "codeChallengeMethod";
+const SIGNIN_ARGUMENT = 'signin';
+const SIGNOUT_ARGUMENT = 'signout';
+const GETTOKEN_ARGUMENT = 'getToken';
+const GETPROFILE_ARGUMENT = 'getProfile';
+const SCOPES_ARGUMENT = 'scopes';
+const GRANT_TYPE_ARGUMENT = 'grantType';
+const PROOFKEY_PARAMETERS_ARGUMENT = 'proofKeyParameters';
+const CODE_CHALLENGE_ARGUMENT = 'codeChallenge';
+const CODE_CHALLENGE_METHOD_ARGUMENT = 'codeChallengeMethod';

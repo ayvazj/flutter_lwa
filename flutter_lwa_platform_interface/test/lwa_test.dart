@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_lwa_platform_interface/flutter_lwa_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:matcher/matcher.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -141,8 +141,8 @@ class MethodChannelLwa extends LwaPlatform {
     }
     if (proofKeyParameters != null) {
       arguments.putIfAbsent(PROOFKEY_PARAMETERS_ARGUMENT, () => {
-        CODE_CHALLENGE_ARGUMENT: '${proofKeyParameters?.codeChallenge ?? ""}',
-        CODE_CHALLENGE_METHOD_ARGUMENT: '${proofKeyParameters?.codeChallengeMethod ?? ""}',
+        CODE_CHALLENGE_ARGUMENT: proofKeyParameters?.codeChallenge ?? "",
+        CODE_CHALLENGE_METHOD_ARGUMENT: proofKeyParameters?.codeChallengeMethod ?? "",
       });
     }
     final result = await channel.invokeMethod(
