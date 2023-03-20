@@ -1,3 +1,7 @@
+## 2.1.1
+
+* Add `AndroidManifest.xml` setup documentation
+
 ## 2.1.0
 
 * Implemented GrantType and ProofKeyParameters arguments to enable using Alexa APIs
