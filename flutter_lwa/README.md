@@ -36,6 +36,41 @@ API key for [Android](https://developer.amazon.com/docs/login-with-amazon/regist
 1. Copy-paste the contents of the API key from the [Login with Amazon](https://developer.amazon.com/apps-and-games/login-with-amazon)
 console into the file `{project_root}/android/app/src/main/assets/api_key.txt`
 
+1. Add the `INTERNET` and `ACCESS_NETWORK_STATE` permissions and the
+`WorkflowActivity` activity to the `AndroidManifest.xml` file located at
+`{project_root}/android/app/src/main/AndroidManifest.xml`.
+
+```xml
+<manifest
+  ...
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        ...
+
+        <!-- android:exported must be true to merge this activity with others -->
+        <activity
+            android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:allowTaskReparenting="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <!-- android:host must use the full package name found in Manifest General Attributes -->
+                <data android:host="${applicationId}" android:scheme="amzn"/>
+            </intent-filter>
+        </activity>
+
+        ...
+    </application>
+</manifest>
+```
+
 **Done!**
 
 ### iOS
